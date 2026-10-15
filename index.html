@@ -1,104 +1,417 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#090719">
-  <title>My Favorite Person 🌌</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galaxy of Memories ✦</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #03020b;
+  color: white;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  height: 100vh;
+}
+
+canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.title {
+  position: fixed;
+  z-index: 2;
+  top: 7%;
+  width: 100%;
+  text-align: center;
+  pointer-events: none;
+}
+
+.title h1 {
+  font-size: clamp(28px, 6vw, 58px);
+  letter-spacing: 7px;
+  background: linear-gradient(
+    90deg, #9d9aff, #fff, #e5a7ff
+  );
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+  filter: drop-shadow(0 0 18px #a38cff88);
+}
+
+.title p {
+  margin-top: 12px;
+  color: #b7aedb;
+  letter-spacing: 3px;
+  font-size: 10px;
+}
+
+#universe {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  perspective: 900px;
+  overflow: hidden;
+}
+
+.photo {
+  position: absolute;
+  width: 82px;
+  height: 108px;
+  padding: 4px;
+  border: 1px solid #d9c8ff99;
+  border-radius: 8px;
+  background: linear-gradient(145deg, #f4eaff, #7f69bb);
+  box-shadow:
+    0 0 12px #a78bfa55,
+    0 0 28px #7654ff33;
+  object-fit: cover;
+  will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.center-glow {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: #b59aff;
+  filter: blur(45px);
+  opacity: .8;
+  pointer-events: none;
+}
+
+.center-core {
+  position: absolute;
+  left: 50%;
+  top: 52%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  box-shadow:
+    0 0 15px 5px #d3b7ff,
+    0 0 45px 15px #875bff,
+    0 0 100px 35px #562bba66;
+  pointer-events: none;
+}
+
+.bottom {
+  position: fixed;
+  z-index: 4;
+  bottom: 6%;
+  width: 100%;
+  text-align: center;
+}
+
+.bottom p {
+  color: #bcb2dc;
+  font-size: 11px;
+  letter-spacing: 2px;
+  margin-bottom: 17px;
+}
+
+button {
+  color: white;
+  padding: 12px 22px;
+  margin: 4px;
+  border: 1px solid #c1a7ff88;
+  border-radius: 30px;
+  background: #8b68df22;
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+button:active {
+  background: #a98bff66;
+}
+
+#hint {
+  position: fixed;
+  z-index: 5;
+  bottom: 2%;
+  width: 100%;
+  text-align: center;
+  color: #756c99;
+  font-size: 9px;
+}
+
+.shooting-star {
+  position: fixed;
+  z-index: 0;
+  width: 100px;
+  height: 2px;
+  background: linear-gradient(90deg, white, transparent);
+  box-shadow: 0 0 8px #a9baff;
+  animation: shooting 1.4s linear forwards;
+  pointer-events: none;
+}
+
+@keyframes shooting {
+  from {
+    transform: translate(0, 0) rotate(-35deg);
+    opacity: 1;
+  }
+  to {
+    transform: translate(-280px, 180px) rotate(-35deg);
+    opacity: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .photo {
+    width: 62px;
+    height: 84px;
+  }
+
+  .title {
+    top: 9%;
+  }
+
+  .title h1 {
+    letter-spacing: 4px;
+  }
+}
+</style>
 </head>
+
 <body>
-  <canvas id="space" aria-hidden="true"></canvas>
-  <div class="nebula nebula-one"></div>
-  <div class="nebula nebula-two"></div>
-  <div class="meteor" aria-hidden="true"></div>
 
-  <header class="topline">
-    <span>✦ A LITTLE UNIVERSE, MADE FOR YOU ✦</span>
-    <button id="musicToggle" class="small-button" type="button" aria-label="Aktifkan atau nonaktifkan musik">♫ Musik</button>
-  </header>
+<canvas id="stars"></canvas>
 
-  <main>
-    <section class="hero">
-      <p class="eyebrow">TO MY FAVORITE HUMAN</p>
-      <h1>My Favorite <span>Person</span> <span class="moon">☾</span></h1>
-      <p class="intro">Di antara miliaran bintang, aku tetap bersyukur menemukan kamu. 💗</p>
+<div class="title">
+  <h1>OUR GALAXY</h1>
+  <p>A MILLION STARS, A MILLION MEMORIES</p>
+</div>
 
-      <div class="galaxy-stage" id="galaxyStage" aria-label="Animasi galaksi berputar">
-        <div class="orbit orbit-one"></div>
-        <div class="orbit orbit-two"></div>
-        <div class="orbit orbit-three"></div>
-        <div class="planet planet-one"></div>
-        <div class="planet planet-two"><span></span></div>
-        <div class="galaxy-core"></div>
-        <div class="spiral spiral-a"></div>
-        <div class="spiral spiral-b"></div>
-        <div class="spiral spiral-c"></div>
-        <div class="galaxy-label">OUR LITTLE UNIVERSE</div>
-      </div>
+<div id="universe">
+  <div class="center-glow"></div>
+  <div class="center-core"></div>
+</div>
 
-      <button id="exploreBtn" class="glow-button" type="button">Explore Our Universe ✨</button>
-      <p class="tiny-note">Putar galaksi dengan menyentuh layar atau menggerakkan kursor</p>
-    </section>
+<div class="bottom">
+  <p>✦ LOST IN OUR LITTLE UNIVERSE ✦</p>
+  <button id="pause">Ⅱ PAUSE</button>
+  <button id="speed">✧ SPEED ×1</button>
+  <button id="fullscreen">⛶ FULLSCREEN</button>
+</div>
 
-    <section class="memories section-card">
-      <p class="eyebrow">OUR LITTLE MOMENTS</p>
-      <h2>Potongan kecil dari cerita kita 📸</h2>
-      <p class="section-intro">Ganti gambar contoh di bawah dengan foto kalian sendiri.</p>
-      <div class="photo-grid">
-        <button class="photo-card" type="button" data-photo="assets/foto1.jpg">
-          <img src="assets/foto1.jpg" alt="Kenangan pertama" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-          <span class="photo-placeholder">🌙💗<small>Tambahkan foto pertama</small></span>
-          <span class="caption">Momen kesayangan</span>
-        </button>
-        <button class="photo-card" type="button" data-photo="assets/foto2.jpg">
-          <img src="assets/foto2.jpg" alt="Kenangan kedua" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-          <span class="photo-placeholder">✨🪐<small>Tambahkan foto kedua</small></span>
-          <span class="caption">Hari yang indah</span>
-        </button>
-        <button class="photo-card" type="button" data-photo="assets/foto3.jpg">
-          <img src="assets/foto3.jpg" alt="Kenangan ketiga" onerror="this.style.display='none';this.nextElementSibling.style.display='grid'">
-          <span class="photo-placeholder">💞🌌<small>Tambahkan foto ketiga</small></span>
-          <span class="caption">Cerita kita</span>
-        </button>
-      </div>
-    </section>
+<div id="hint">Tambahkan foto kalian di folder photos</div>
 
-    <section class="letter section-card">
-      <p class="eyebrow">A LETTER FROM MY HEART</p>
-      <h2>Sedikit dari hati aku 💌</h2>
-      <button id="letterBtn" class="envelope" type="button" aria-expanded="false">
-        <span class="envelope-icon">💌</span>
-        <span id="letterButtonText">Buka surat kecil ini</span>
-      </button>
-      <div id="letterContent" class="letter-content" hidden>
-        <p>Sayanggg, makasih yaa udah hadir di hidup aku. Aku seneng bisa kenal kamu dan punya banyak kenangan bareng kamu. Aku mungkin belum sempurna, tapi aku bakal terus belajar buat ngerti kamu, menghargai kamu, dan jadi seseorang yang bisa kamu percaya.</p>
-        <p>Semoga kita bisa terus bikin banyak kenangan indah bareng yaa. I love youuu 💗</p>
-      </div>
-    </section>
+<script>
+const universe = document.getElementById("universe");
+const canvas = document.getElementById("stars");
+const ctx = canvas.getContext("2d");
 
-    <section class="counter section-card">
-      <p class="eyebrow">EVERY DAY WITH YOU</p>
-      <h2>Sudah berapa hari kita? 🌙</h2>
-      <p class="days" id="daysTogether">♡</p>
-      <p class="section-intro">hari penuh cerita — ubah tanggal jadian di script.js</p>
-    </section>
+let W, H, stars = [];
+let paused = false;
+let speed = 1;
+let rotation = 0;
+let lastTime = 0;
 
-    <footer>
-      <p>Out of all the galaxies, you're my favorite universe. 💗</p>
-      <span>Made with love, just for you ✦</span>
-    </footer>
-  </main>
+function resize() {
+  W = innerWidth;
+  H = innerHeight;
 
-  <div id="lightbox" class="lightbox" hidden>
-    <button id="closeLightbox" class="close-button" type="button" aria-label="Tutup foto">×</button>
-    <img id="lightboxImage" src="" alt="Foto kenangan diperbesar">
-  </div>
+  const dpr = Math.min(devicePixelRatio || 1, 2);
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + "px";
+  canvas.style.height = H + "px";
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-  <audio id="backgroundMusic" loop preload="none">
-    <!-- Upload musik yang boleh digunakan ke assets/music.mp3 -->
-    <source src="assets/music.mp3" type="audio/mpeg">
-  </audio>
-  <script src="script.js" defer></script>
+  stars = Array.from({length: 240}, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: Math.random() * 1.5 + .3,
+    phase: Math.random() * Math.PI * 2
+  }));
+}
+
+function drawStars(t) {
+  ctx.clearRect(0, 0, W, H);
+
+  const bg = ctx.createRadialGradient(
+    W/2, H/2, 0,
+    W/2, H/2, Math.max(W,H)*.7
+  );
+
+  bg.addColorStop(0, "#17102f");
+  bg.addColorStop(.5, "#090719");
+  bg.addColorStop(1, "#020108");
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+
+  for (const s of stars) {
+    const a = .25 + .75 *
+      Math.abs(Math.sin(t*.0015 + s.phase));
+
+    ctx.fillStyle = `rgba(210,215,255,${a})`;
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fill();
+  }
+}
+
+// ------------------------------------------------
+// FOTO: letakkan file foto di folder photos.
+// Ubah nama file di array ini sesuai foto milikmu.
+// ------------------------------------------------
+
+const photoFiles = [
+  "photos/foto1.jpg",
+  "photos/foto2.jpg",
+  "photos/foto3.jpg",
+  "photos/foto4.jpg",
+  "photos/foto5.jpg",
+  "photos/foto6.jpg",
+  "photos/foto7.jpg",
+  "photos/foto8.jpg",
+  "photos/foto9.jpg",
+  "photos/foto10.jpg",
+  "photos/foto11.jpg",
+  "photos/foto12.jpg"
+];
+
+const items = [];
+
+photoFiles.forEach((src, i) => {
+  const card = document.createElement("div");
+  card.className = "photo";
+
+  const img = document.createElement("img");
+  img.src = src;
+  img.alt = "Memory " + (i+1);
+  img.loading = "lazy";
+
+  img.onerror = () => {
+    card.style.display = "none";
+  };
+
+  card.appendChild(img);
+  universe.appendChild(card);
+
+  const arm = i % 3;
+  const r = .18 + (i / photoFiles.length) * .78;
+
+  items.push({
+    card,
+    r,
+    angle: arm * Math.PI * 2 / 3 + r * 5.5,
+    arm,
+    size: .75 + Math.random() * .35,
+    phase: Math.random() * Math.PI * 2
+  });
+});
+
+function animate(time) {
+  requestAnimationFrame(animate);
+
+  const dt = Math.min((time-lastTime)/1000 || 0, .05);
+  lastTime = time;
+
+  if (!paused) rotation += dt * .20 * speed;
+
+  drawStars(time);
+
+  const cx = W/2;
+  const cy = H*.52;
+  const radius = Math.min(W*.43, H*.37);
+
+  for (const p of items) {
+    const a = p.angle + rotation *
+      (.25 + (1-p.r)*.75);
+
+    const r = p.r * radius;
+
+    const x = cx + Math.cos(a) * r;
+    const y = cy + Math.sin(a) * r * .57;
+
+    // Kartu tampak lebih kecil saat jauh
+    const depth = .55 + p.r * .55;
+    const float = Math.sin(time*.001 + p.phase)*3;
+    const size = p.size * depth;
+
+    // Posisi dan kedalaman
+    p.card.style.left = x + "px";
+    p.card.style.top = (y+float) + "px";
+
+    p.card.style.zIndex = String(
+      Math.round(p.r*100)
+    );
+
+    p.card.style.transform =
+      `translate(-50%,-50%) scale(${size}) ` +
+      `rotate(${Math.sin(a)*9}deg)`;
+
+    p.card.style.opacity =
+      String(.65 + p.r*.35);
+  }
+}
+
+resize();
+addEventListener("resize", resize);
+requestAnimationFrame(animate);
+
+// Kontrol animasi
+document.getElementById("pause").onclick = function() {
+  paused = !paused;
+  this.textContent = paused ? "▶ PLAY" : "Ⅱ PAUSE";
+};
+
+document.getElementById("speed").onclick = function() {
+  speed = speed >= 3 ? .5 : speed + .5;
+  this.textContent = "✧ SPEED ×" + speed;
+};
+
+document.getElementById("fullscreen").onclick = function() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen?.();
+  } else {
+    document.exitFullscreen?.();
+  }
+};
+
+// Bintang jatuh
+setInterval(() => {
+  if (paused || Math.random() > .7) return;
+
+  const s = document.createElement("div");
+  s.className = "shooting-star";
+  s.style.left = Math.random()*W + "px";
+  s.style.top = Math.random()*H*.6 + "px";
+
+  document.body.appendChild(s);
+  setTimeout(() => s.remove(), 1500);
+}, 1300);
+</script>
+
 </body>
 </html>
