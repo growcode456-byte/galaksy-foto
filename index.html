@@ -3,261 +3,848 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Galaksi Hati</title>
+  <meta name="theme-color" content="#100d25">
+  <title>Untuk Kamu 💗</title>
 
   <style>
+    :root {
+      --night: #100d25;
+      --pink: #ff9bc8;
+      --lavender: #c8adff;
+      --white: #fff8ff;
+      --soft-white: rgba(255, 248, 255, 0.76);
+      --glass: rgba(27, 20, 54, 0.58);
+    }
+
     * {
       box-sizing: border-box;
     }
 
-    html, body {
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
       margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #020106;
-      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--white);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      background:
+        radial-gradient(ellipse at 15% 20%, rgba(103, 55, 166, 0.43), transparent 38%),
+        radial-gradient(ellipse at 85% 32%, rgba(37, 87, 164, 0.37), transparent 38%),
+        radial-gradient(ellipse at 50% 95%, rgba(171, 62, 135, 0.25), transparent 42%),
+        var(--night);
     }
 
-    canvas {
-      display: block;
-      width: 100%;
-      height: 100%;
+    button {
+      color: inherit;
+      font: inherit;
     }
 
-    .pesan {
+    .sky,
+    .glow,
+    .stars,
+    .meteor-layer {
       position: fixed;
-      z-index: 2;
-      left: 50%;
-      bottom: 8%;
-      transform: translateX(-50%);
-      width: 90%;
-      color: #ffd5f5;
-      text-align: center;
-      font-size: clamp(14px, 3.5vw, 22px);
-      letter-spacing: 2px;
-      text-shadow: 0 0 10px #ff28c8, 0 0 25px #ff28c8;
-      animation: kedip 2s infinite alternate;
+      inset: 0;
       pointer-events: none;
     }
 
-    @keyframes kedip {
-      from { opacity: .65; }
+    .sky {
+      z-index: -5;
+      overflow: hidden;
+      background:
+        radial-gradient(ellipse at 48% 48%, rgba(101, 66, 151, 0.13), transparent 55%);
+    }
+
+    .glow {
+      z-index: -4;
+      inset: -15%;
+      opacity: 0.7;
+      background:
+        radial-gradient(ellipse at 28% 40%, rgba(111, 81, 200, 0.16), transparent 35%),
+        radial-gradient(ellipse at 78% 65%, rgba(234, 104, 169, 0.12), transparent 32%);
+      transform: translate(var(--px, 0), var(--py, 0));
+      transition: transform 0.3s ease-out;
+    }
+
+    .stars {
+      z-index: -3;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: var(--size, 2px);
+      height: var(--size, 2px);
+      border-radius: 50%;
+      background: white;
+      opacity: var(--opacity, 0.7);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+      animation: twinkle var(--duration, 3s) ease-in-out infinite alternate;
+      animation-delay: var(--delay, 0s);
+    }
+
+    @keyframes twinkle {
+      from { opacity: 0.25; transform: scale(0.7); }
+      to { opacity: 1; transform: scale(1.25); }
+    }
+
+    .meteor-layer {
+      z-index: -2;
+      overflow: hidden;
+    }
+
+    .meteor {
+      position: absolute;
+      top: -10%;
+      left: var(--left);
+      width: 120px;
+      height: 1px;
+      opacity: 0;
+      transform: rotate(-35deg);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.9), transparent);
+      filter: drop-shadow(0 0 5px #c8adff);
+      animation: shoot 1.2s linear forwards;
+    }
+
+    @keyframes shoot {
+      0% { opacity: 0; transform: translate(0, 0) rotate(-35deg); }
+      12% { opacity: 0.9; }
+      100% { opacity: 0; transform: translate(-360px, 430px) rotate(-35deg); }
+    }
+
+    .screen {
+      min-height: 100svh;
+      width: 100%;
+    }
+
+    .intro {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+
+    .intro.leaving {
+      opacity: 0;
+      transform: scale(1.04);
+      pointer-events: none;
+    }
+
+    .intro-card {
+      width: min(100%, 620px);
+      padding: clamp(28px, 7vw, 58px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 30px;
+      background: linear-gradient(145deg, rgba(255,255,255,.09), rgba(255,255,255,.025));
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.25);
+      backdrop-filter: blur(12px);
+      animation: float 5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .moon {
+      margin-bottom: 10px;
+      font-size: clamp(42px, 10vw, 64px);
+      filter: drop-shadow(0 0 18px rgba(255, 220, 157, 0.45));
+    }
+
+    .intro h1,
+    .page-title {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-weight: 500;
+      letter-spacing: 0.01em;
+    }
+
+    .intro h1 {
+      font-size: clamp(2.5rem, 9vw, 4.5rem);
+      line-height: 1.12;
+      background: linear-gradient(100deg, #fff5fb, #ffacd3 48%, #d8c3ff);
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .intro p {
+      margin: 18px 0 28px;
+      color: var(--soft-white);
+      font-size: clamp(1rem, 3.8vw, 1.15rem);
+    }
+
+    .primary-button,
+    .soft-button {
+      min-height: 48px;
+      padding: 12px 22px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .primary-button {
+      color: #31152d;
+      background: linear-gradient(110deg, #ffc1dc, #d6bcff);
+      box-shadow: 0 8px 28px rgba(224, 136, 202, 0.25);
+      font-weight: 700;
+    }
+
+    .soft-button {
+      color: var(--white);
+      background: rgba(255,255,255,.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .primary-button:hover,
+    .soft-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(214, 165, 255, .2);
+    }
+
+    .primary-button:active,
+    .soft-button:active {
+      transform: scale(.97);
+    }
+
+    .main-page {
+      display: none;
+      opacity: 0;
+      padding: 28px 18px 52px;
+      transition: opacity .8s ease;
+    }
+
+    .main-page.visible {
+      display: block;
+    }
+
+    .main-page.revealed {
+      opacity: 1;
+    }
+
+    .content {
+      width: min(100%, 900px);
+      margin: 0 auto;
+    }
+
+    .top-note {
+      margin: 8px 0 10px;
+      color: var(--soft-white);
+      text-align: center;
+      font-size: .88rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .page-title {
+      margin-bottom: 26px;
+      text-align: center;
+      font-size: clamp(2.2rem, 8vw, 4rem);
+      background: linear-gradient(110deg, #fff7fc, #ffc0dc, #d4c4ff);
+      color: transparent;
+      background-clip: text;
+      -webkit-background-clip: text;
+    }
+
+    .photo-wrap {
+      position: relative;
+      width: min(100%, 610px);
+      margin: 0 auto 28px;
+    }
+
+    .photo-frame {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      aspect-ratio: 4 / 3;
+      border: 1px solid rgba(255, 209, 239, .52);
+      border-radius: 26px;
+      background:
+        radial-gradient(ellipse at 50% 0%, rgba(200, 173, 255, .26), transparent 70%),
+        linear-gradient(135deg, rgba(90, 61, 133, .65), rgba(31, 42, 79, .75));
+      box-shadow:
+        0 0 0 5px rgba(255, 255, 255, .035),
+        0 0 35px rgba(217, 132, 226, .2),
+        0 24px 55px rgba(0, 0, 0, .3);
+    }
+
+    .photo-frame img {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-placeholder {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-content: center;
+      gap: 8px;
+      padding: 20px;
+      text-align: center;
+      color: rgba(255, 248, 255, .85);
+    }
+
+    .photo-placeholder span:first-child {
+      font-size: 2.7rem;
+    }
+
+    .photo-placeholder span:last-child {
+      font-size: .95rem;
+    }
+
+    .floating-heart {
+      position: absolute;
+      z-index: 2;
+      color: #ffafd3;
+      text-shadow: 0 0 15px rgba(255, 156, 207, .7);
+      animation: heartFloat 4s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .heart-one { top: 10%; left: -12px; font-size: 24px; }
+    .heart-two { top: 32%; right: -13px; font-size: 19px; animation-delay: -1.6s; }
+    .heart-three { bottom: 3%; left: 12%; font-size: 16px; animation-delay: -2.4s; }
+
+    @keyframes heartFloat {
+      0%, 100% { transform: translateY(0) rotate(-8deg); opacity: .7; }
+      50% { transform: translateY(-14px) rotate(8deg); opacity: 1; }
+    }
+
+    .photo-caption {
+      margin: 13px 0 0;
+      text-align: center;
+      color: var(--soft-white);
+      font-size: .92rem;
+    }
+
+    .gallery {
+      display: flex;
+      gap: 14px;
+      overflow-x: auto;
+      padding: 12px 3px 18px;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 192, 220, .55) transparent;
+    }
+
+    .gallery-card {
+      position: relative;
+      flex: 0 0 min(72vw, 260px);
+      aspect-ratio: 4 / 3;
+      overflow: hidden;
+      scroll-snap-align: center;
+      border: 1px solid rgba(255, 255, 255, .18);
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(95, 68, 145, .7), rgba(43, 60, 102, .7));
+      box-shadow: 0 12px 30px rgba(0, 0, 0, .22);
+    }
+
+    .gallery-card img {
+      display: none;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gallery-card .photo-placeholder {
+      font-size: .9rem;
+    }
+
+    .section-label {
+      margin: 34px 0 12px;
+      color: #ffd1e6;
+      text-align: center;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .message-card {
+      margin: 0 auto;
+      padding: clamp(22px, 5vw, 34px);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      background: var(--glass);
+      box-shadow: 0 15px 45px rgba(0,0,0,.16);
+      backdrop-filter: blur(10px);
+      color: rgba(255, 248, 255, .9);
+      line-height: 1.85;
+      text-align: center;
+      font-size: clamp(1rem, 3.7vw, 1.12rem);
+    }
+
+    .counter-card {
+      margin: 20px auto 0;
+      padding: 18px 20px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 20px;
+      background: rgba(255,255,255,.055);
+      text-align: center;
+    }
+
+    .counter-card p {
+      margin: 0;
+      color: var(--soft-white);
+    }
+
+    .counter-number {
+      display: block;
+      margin: 6px 0 1px;
+      color: #ffd1e6;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 8vw, 3.2rem);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 22px 0 12px;
+    }
+
+    .closing {
+      margin: 48px 0 6px;
+      color: #ffd3e7;
+      text-align: center;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.3rem, 5vw, 2rem);
+      line-height: 1.5;
+    }
+
+    .footer-note {
+      color: rgba(255, 248, 255, .53);
+      text-align: center;
+      font-size: .82rem;
+    }
+
+    .modal {
+      position: fixed;
+      z-index: 20;
+      inset: 0;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(10, 7, 22, .76);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal.show {
+      display: grid;
+      animation: fadeIn .25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
       to { opacity: 1; }
+    }
+
+    .modal-content {
+      position: relative;
+      width: min(100%, 500px);
+      padding: 26px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 25px;
+      background: linear-gradient(145deg, rgba(53, 37, 85, .97), rgba(30, 25, 59, .98));
+      box-shadow: 0 25px 70px rgba(0,0,0,.45);
+      text-align: center;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 13px;
+      width: 38px;
+      height: 38px;
+      border: 0;
+      border-radius: 50%;
+      color: white;
+      background: rgba(255,255,255,.1);
+      cursor: pointer;
+      font-size: 1.4rem;
+    }
+
+    .envelope {
+      position: relative;
+      width: min(100%, 330px);
+      height: 200px;
+      margin: 34px auto 20px;
+      border-radius: 12px;
+      background: linear-gradient(145deg, #f7aacd, #d5b4f7);
+      box-shadow: 0 14px 35px rgba(0,0,0,.25);
+    }
+
+    .envelope::before {
+      position: absolute;
+      z-index: 2;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 0;
+      border-top: 105px solid #ffc4dc;
+      border-right: 165px solid transparent;
+      border-left: 165px solid transparent;
+      content: "";
+      transform-origin: top;
+      transition: transform .55s ease;
+    }
+
+    .envelope.open::before {
+      transform: rotateX(180deg);
+      z-index: 0;
+    }
+
+    .envelope::after {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: linear-gradient(35deg, #df8db8, transparent 50%),
+        linear-gradient(-35deg, #e9a2ca, transparent 50%);
+      clip-path: polygon(0 100%, 50% 48%, 100% 100%);
+      content: "";
+    }
+
+    .letter-paper {
+      position: absolute;
+      z-index: 1;
+      left: 8%;
+      bottom: 8px;
+      width: 84%;
+      height: 85%;
+      padding: 20px 14px;
+      border-radius: 8px;
+      background: #fff8fc;
+      color: #58334f;
+      transition: transform .65s ease .15s;
+    }
+
+    .envelope.open .letter-paper {
+      transform: translateY(-48px);
+    }
+
+    .letter-paper span {
+      display: block;
+      margin-top: 14px;
+      font-size: 2rem;
+    }
+
+    .letter-hint {
+      color: var(--soft-white);
+      font-size: .9rem;
+    }
+
+    .heart-pop {
+      position: fixed;
+      z-index: 30;
+      pointer-events: none;
+      animation: popUp 1.4s ease-out forwards;
+      filter: drop-shadow(0 0 8px rgba(255, 142, 200, .7));
+    }
+
+    @keyframes popUp {
+      0% { opacity: 0; transform: translateY(0) scale(.5) rotate(0); }
+      15% { opacity: 1; }
+      100% { opacity: 0; transform: translate(var(--drift), -150px) scale(1.4) rotate(25deg); }
+    }
+
+    @media (max-width: 540px) {
+      .main-page { padding: 22px 15px 38px; }
+      .photo-frame { border-radius: 21px; }
+      .button-row { gap: 9px; }
+      .soft-button { padding: 11px 16px; font-size: .92rem; }
+      .envelope { height: 175px; }
+      .envelope::before {
+        border-top-width: 92px;
+        border-right-width: calc(min(42vw, 165px));
+        border-left-width: calc(min(42vw, 165px));
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <canvas id="galaksi"></canvas>
-  <div class="pesan">SELAMANYA BERSAMAMU ✦</div>
+  <div class="sky" aria-hidden="true"></div>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="stars" id="stars" aria-hidden="true"></div>
+  <div class="meteor-layer" id="meteorLayer" aria-hidden="true"></div>
+
+  <section class="screen intro" id="intro">
+    <div class="intro-card">
+      <div class="moon" aria-hidden="true">☾</div>
+      <!-- EDIT: ganti sapaan/nama panggilan di bawah -->
+      <h1>Haii, bebbbb💗</h1>
+      <p>Aku punya sesuatu buat kamu...</p>
+      <button class="primary-button" id="openGift">Buka hadiah kecilku ✨</button>
+    </div>
+  </section>
+
+  <main class="main-page" id="mainPage">
+    <div class="content">
+      <p class="top-note">a little universe, made for you</p>
+      <h2 class="page-title">My Favorite Person 🌙</h2>
+
+      <div class="photo-wrap">
+        <span class="floating-heart heart-one" aria-hidden="true">♥</span>
+        <span class="floating-heart heart-two" aria-hidden="true">♥</span>
+        <span class="floating-heart heart-three" aria-hidden="true">♥</span>
+
+        <div class="photo-frame">
+          <!-- EDIT: ganti foto-utama.jpg dengan nama file foto kalian -->
+          <img src="foto-utama.jpg" alt="Foto kenangan kita"
+               onload="showPhoto(this)" onerror="hidePhoto(this)">
+          <div class="photo-placeholder">
+            <span>🌙💗</span>
+            <span>Foto favorit kita akan ada di sini</span>
+          </div>
+        </div>
+        <p class="photo-caption">Salah satu hal favoritku: punya kamu ✨</p>
+      </div>
+
+      <p class="section-label">Potongan kecil dari cerita kita 📸</p>
+      <div class="gallery" id="gallery" aria-label="Galeri kenangan yang bisa digeser">
+        <!-- EDIT: ganti nama file foto-foto galeri di bawah -->
+        <div class="gallery-card">
+          <img src="foto-1.jpg" alt="Kenangan kita 1"
+               onload="showPhoto(this)" onerror="hidePhoto(this)">
+          <div class="photo-placeholder"><span>🌷</span><span>Kenangan pertama</span></div>
+        </div>
+        <div class="gallery-card">
+          <img src="foto-2.jpg" alt="Kenangan kita 2"
+               onload="showPhoto(this)" onerror="hidePhoto(this)">
+          <div class="photo-placeholder"><span>🌌</span><span>Momen kesayangan</span></div>
+        </div>
+        <div class="gallery-card">
+          <img src="foto-3.jpg" alt="Kenangan kita 3"
+               onload="showPhoto(this)" onerror="hidePhoto(this)">
+          <div class="photo-placeholder"><span>💞</span><span>Hari yang indah</span></div>
+        </div>
+      </div>
+
+      <p class="section-label">Sedikit dari hati aku 💌</p>
+      <div class="message-card">
+        Dari sekian banyak hal indah di dunia, aku bersyukur bisa kenal kamu.
+        Makasih udah hadir di hidup aku. Semoga kita bisa terus saling ngerti,
+        saling jaga, dan bikin banyak kenangan indah bareng.
+        <br><strong>I love you, bebbb 💗</strong>
+      </div>
+
+      <div class="counter-card">
+        <p>Sudah ada banyak hari indah sejak kita bersama</p>
+        <span class="counter-number" id="dayCount">—</span>
+        <p>hari dan masih terus bertambah 🌙</p>
+      </div>
+
+      <div class="button-row">
+        <button class="soft-button" id="letterButton">Buka surat cintaku 💌</button>
+        <button class="soft-button" id="galleryButton">Putar kenangan kita 📸</button>
+        <button class="soft-button" id="musicButton" aria-pressed="false">Putar musik 🎵</button>
+      </div>
+
+      <p class="closing">You are my favorite part of every universe. 💗</p>
+      <p class="footer-note">dibuat dengan sayang, hanya untuk kamu ✨</p>
+    </div>
+  </main>
+
+  <div class="modal" id="letterModal" role="dialog" aria-modal="true"
+       aria-labelledby="letterTitle">
+    <div class="modal-content">
+      <button class="close-modal" id="closeModal" aria-label="Tutup surat">×</button>
+      <h2 id="letterTitle">Surat kecil untuk kamu 💗</h2>
+      <div class="envelope" id="envelope">
+        <div class="letter-paper">
+          <strong>Untuk orang favoritku</strong>
+          <span>💌</span>
+        </div>
+      </div>
+      <p class="letter-hint">Satu semesta pun rasanya belum cukup untuk bilang betapa berharganya kamu buat aku.</p>
+      <button class="soft-button" id="closeLetter">Aku simpan ya 💗</button>
+    </div>
+  </div>
+
+  <!-- EDIT: ubah src ke file musik milikmu; musik hanya diputar setelah tombol ditekan -->
+  <audio id="romanticMusic" src="musik-romantis.mp3" loop preload="none"></audio>
 
   <script>
-    const canvas = document.getElementById("galaksi");
-    const ctx = canvas.getContext("2d");
+    // EDIT: masukkan tanggal jadian dengan format YYYY-MM-DD.
+    // Contoh: "2024-08-17"
+    const relationshipStartDate = "2025-01-01";
 
-    let lebar, tinggi, dpr;
-    let partikelLantai = [];
-    let partikelHati = [];
-    let bintang = [];
+    const intro = document.getElementById("intro");
+    const mainPage = document.getElementById("mainPage");
+    const music = document.getElementById("romanticMusic");
+    const musicButton = document.getElementById("musicButton");
+    const letterModal = document.getElementById("letterModal");
+    const envelope = document.getElementById("envelope");
 
-    function acak(min, max) {
-      return Math.random() * (max - min) + min;
+    // Menampilkan foto jika file ditemukan; kalau belum, placeholder tetap terlihat.
+    function showPhoto(image) {
+      image.style.display = "block";
+      const placeholder = image.parentElement.querySelector(".photo-placeholder");
+      if (placeholder) placeholder.style.display = "none";
     }
 
-    function aturUkuran() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
-      lebar = window.innerWidth;
-      tinggi = window.innerHeight;
-
-      canvas.width = lebar * dpr;
-      canvas.height = tinggi * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      buatPartikel();
+    function hidePhoto(image) {
+      image.style.display = "none";
     }
 
-    function buatPartikel() {
-      partikelLantai = [];
-      partikelHati = [];
-      bintang = [];
-
-      // Partikel galaksi di bagian bawah layar
-      for (let i = 0; i < 1500; i++) {
-        partikelLantai.push({
-          x: acak(-1, 1),
-          z: Math.random(),
-          ukuran: acak(0.7, 2.4),
-          warna: Math.random() > 0.5 ? "#ff5bd7" : "#ffb2ea",
-          fase: acak(0, Math.PI * 2)
-        });
-      }
-
-      // Bintang kecil di langit
-      for (let i = 0; i < 100; i++) {
-        bintang.push({
-          x: Math.random() * lebar,
-          y: Math.random() * tinggi * 0.72,
-          ukuran: acak(0.5, 1.8),
-          kedip: acak(0, Math.PI * 2)
-        });
-      }
-
-      // Membuat titik-titik di dalam bentuk hati
-      for (let i = 0; i < 950; i++) {
-        const t = Math.random() * Math.PI * 2;
-        const r = Math.sqrt(Math.random());
-
-        const hx = 16 * Math.pow(Math.sin(t), 3);
-        const hy =
-          13 * Math.cos(t) -
-          5 * Math.cos(2 * t) -
-          2 * Math.cos(3 * t) -
-          Math.cos(4 * t);
-
-        partikelHati.push({
-          x: hx * r,
-          y: hy * r,
-          ukuran: acak(0.7, 2.3),
-          fase: acak(0, Math.PI * 2),
-          warna: Math.random() > 0.3 ? "#ff20cf" : "#ffb5f2"
-        });
-      }
+    // Bintang kecil dibuat satu kali agar animasi tetap ringan.
+    const starsContainer = document.getElementById("stars");
+    for (let i = 0; i < 95; i++) {
+      const star = document.createElement("span");
+      star.className = "star";
+      star.style.left = Math.random() * 100 + "%";
+      star.style.top = Math.random() * 100 + "%";
+      star.style.setProperty("--size", (Math.random() * 2 + 1) + "px");
+      star.style.setProperty("--opacity", (Math.random() * 0.65 + 0.25).toFixed(2));
+      star.style.setProperty("--duration", (Math.random() * 3 + 2) + "s");
+      star.style.setProperty("--delay", (Math.random() * -5) + "s");
+      starsContainer.appendChild(star);
     }
 
-    function gambarLatar(waktu) {
-      const gradasi = ctx.createLinearGradient(0, 0, 0, tinggi);
-      gradasi.addColorStop(0, "#020106");
-      gradasi.addColorStop(0.68, "#08020d");
-      gradasi.addColorStop(1, "#160313");
+    // Meteor muncul sesekali.
+    const meteorLayer = document.getElementById("meteorLayer");
+    function createMeteor() {
+      const meteor = document.createElement("span");
+      meteor.className = "meteor";
+      meteor.style.setProperty("--left", (Math.random() * 110 + 5) + "%");
+      meteorLayer.appendChild(meteor);
+      meteor.addEventListener("animationend", () => meteor.remove());
+    }
+    setInterval(createMeteor, 6500);
 
-      ctx.fillStyle = gradasi;
-      ctx.fillRect(0, 0, lebar, tinggi);
-
-      // Bintang
-      for (const b of bintang) {
-        const terang = 0.3 + (Math.sin(waktu * 0.001 + b.kedip) + 1) * 0.35;
-        ctx.globalAlpha = terang;
-        ctx.fillStyle = "#ffffff";
-        ctx.beginPath();
-        ctx.arc(b.x, b.y, b.ukuran, 0, Math.PI * 2);
-        ctx.fill();
-      }
-
-      ctx.globalAlpha = 1;
+    // Efek parallax ringan: kursor di komputer, sensor gerak jika tersedia di HP.
+    function setParallax(x, y) {
+      document.documentElement.style.setProperty("--px", `${x}px`);
+      document.documentElement.style.setProperty("--py", `${y}px`);
     }
 
-    function gambarLantai(waktu) {
-      const horizon = tinggi * 0.72;
+    window.addEventListener("pointermove", (event) => {
+      if (event.pointerType === "touch") return;
+      const x = (event.clientX / window.innerWidth - 0.5) * 12;
+      const y = (event.clientY / window.innerHeight - 0.5) * 12;
+      setParallax(x, y);
+    }, { passive: true });
 
-      // Cahaya galaksi di garis horizon
-      const cahaya = ctx.createRadialGradient(
-        lebar / 2, horizon, 5,
-        lebar / 2, horizon, lebar * 0.65
+    window.addEventListener("deviceorientation", (event) => {
+      if (event.gamma == null || event.beta == null) return;
+      setParallax(
+        Math.max(-10, Math.min(10, event.gamma / 4)),
+        Math.max(-10, Math.min(10, event.beta / 6))
       );
-      cahaya.addColorStop(0, "rgba(255, 80, 220, 0.35)");
-      cahaya.addColorStop(0.45, "rgba(255, 40, 180, 0.12)");
-      cahaya.addColorStop(1, "rgba(0, 0, 0, 0)");
+    }, { passive: true });
 
-      ctx.fillStyle = cahaya;
-      ctx.fillRect(0, horizon - 100, lebar, tinggi - horizon + 100);
+    // Hadiah pembuka.
+    document.getElementById("openGift").addEventListener("click", () => {
+      intro.classList.add("leaving");
+      setTimeout(() => {
+        intro.style.display = "none";
+        mainPage.classList.add("visible");
+        requestAnimationFrame(() => mainPage.classList.add("revealed"));
+        updateDayCount();
+        heartConfetti(12);
+      }, 650);
+    });
 
-      // Partikel perspektif
-      for (const p of partikelLantai) {
-        const z = (p.z + (waktu * 0.00008) % 1) % 1;
-        const kedalaman = z * z;
+    // Hitung selisih tanggal berdasarkan hari kalender.
+    function updateDayCount() {
+      const parts = relationshipStartDate.split("-").map(Number);
+      const start = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
+      const now = new Date();
+      const today = new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+      const days = Math.floor((today - start) / 86400000);
+      document.getElementById("dayCount").textContent =
+        Number.isFinite(days) && days >= 0 ? days.toLocaleString("id-ID") : "💗";
+    }
 
-        const x = lebar / 2 + p.x * lebar * kedalaman * 0.78;
-        const y = horizon + kedalaman * tinggi * 0.38;
-        const ukuran = p.ukuran * (0.3 + kedalaman * 1.8);
-        const kedip = 0.55 + Math.sin(waktu * 0.003 + p.fase) * 0.35;
+    // Galeri horizontal: bisa digeser dengan jari di HP.
+    document.getElementById("galleryButton").addEventListener("click", () => {
+      document.getElementById("gallery").scrollIntoView({ behavior: "smooth", block: "center" });
+      heartConfetti(7);
+    });
 
-        ctx.globalAlpha = kedip;
-        ctx.fillStyle = p.warna;
-        ctx.shadowColor = p.warna;
-        ctx.shadowBlur = 8;
-        ctx.fillRect(x, y, ukuran, ukuran);
+    // Buka amplop surat.
+    function openLetter() {
+      letterModal.classList.add("show");
+      envelope.classList.remove("open");
+      requestAnimationFrame(() => envelope.classList.add("open"));
+      heartConfetti(8);
+    }
+
+    function closeLetter() {
+      letterModal.classList.remove("show");
+      envelope.classList.remove("open");
+    }
+
+    document.getElementById("letterButton").addEventListener("click", openLetter);
+    document.getElementById("closeModal").addEventListener("click", closeLetter);
+    document.getElementById("closeLetter").addEventListener("click", closeLetter);
+
+    letterModal.addEventListener("click", (event) => {
+      if (event.target === letterModal) closeLetter();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeLetter();
+    });
+
+    // Musik tidak autoplay; pengguna harus menekan tombol.
+    musicButton.addEventListener("click", async () => {
+      if (music.paused) {
+        try {
+          await music.play();
+          musicButton.textContent = "Jeda musik ⏸️";
+          musicButton.setAttribute("aria-pressed", "true");
+          heartConfetti(5);
+        } catch (error) {
+          alert("Musik belum ditemukan. Pastikan file musik-romantis.mp3 ada di folder website, atau ganti nama file musik di index.html.");
+        }
+      } else {
+        music.pause();
+        musicButton.textContent = "Putar musik 🎵";
+        musicButton.setAttribute("aria-pressed", "false");
       }
+    });
 
-      ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
-    }
+    music.addEventListener("ended", () => {
+      musicButton.textContent = "Putar musik 🎵";
+      musicButton.setAttribute("aria-pressed", "false");
+    });
 
-    function gambarLubangHitam(waktu) {
-      const x = lebar / 2;
-      const y = tinggi * 0.78;
-      const rx = Math.min(lebar * 0.23, 125);
-      const ry = rx * 0.22;
-
-      // Cincin bercahaya
-      ctx.save();
-      ctx.translate(x, y);
-      ctx.rotate(-0.04);
-
-      ctx.shadowColor = "#ffe45c";
-      ctx.shadowBlur = 24;
-      ctx.strokeStyle = "#fff08a";
-      ctx.lineWidth = 9;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, rx, ry, 0, 0, Math.PI * 2);
-      ctx.stroke();
-
-      ctx.shadowBlur = 0;
-      ctx.strokeStyle = "#ffb52e";
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, rx * 0.78, ry * 0.72, 0, 0, Math.PI * 2);
-      ctx.stroke();
-
-      // Pusat hitam
-      const pulse = Math.sin(waktu * 0.002) * 2;
-      ctx.fillStyle = "#020106";
-      ctx.beginPath();
-      ctx.ellipse(0, -10, rx * 0.38 + pulse, ry * 1.45, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.restore();
-    }
-
-    function gambarHati(waktu) {
-      const skala = Math.min(lebar / 42, tinggi / 55) * 0.72;
-      const detak = 1 + Math.sin(waktu * 0.003) * 0.035;
-      const pusatX = lebar / 2;
-      const pusatY = tinggi * 0.60;
-
-      ctx.save();
-      ctx.translate(pusatX, pusatY);
-      ctx.scale(skala * detak, -skala * detak);
-
-      for (const p of partikelHati) {
-        const kilau = 0.5 + (Math.sin(waktu * 0.004 + p.fase) + 1) * 0.25;
-
-        ctx.globalAlpha = kilau;
-        ctx.fillStyle = p.warna;
-        ctx.shadowColor = "#ff18d0";
-        ctx.shadowBlur = 8;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.ukuran, 0, Math.PI * 2);
-        ctx.fill();
+    // Confetti hati kecil.
+    function heartConfetti(amount) {
+      const symbols = ["💗", "💕", "♡", "✨"];
+      for (let i = 0; i < amount; i++) {
+        const heart = document.createElement("span");
+        heart.className = "heart-pop";
+        heart.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        heart.style.left = (Math.random() * 100) + "vw";
+        heart.style.top = (55 + Math.random() * 35) + "vh";
+        heart.style.fontSize = (14 + Math.random() * 16) + "px";
+        heart.style.setProperty("--drift", (Math.random() * 100 - 50) + "px");
+        document.body.appendChild(heart);
+        heart.addEventListener("animationend", () => heart.remove());
       }
-
-      ctx.restore();
-      ctx.globalAlpha = 1;
-      ctx.shadowBlur = 0;
     }
-
-    function gambar(waktu) {
-      gambarLatar(waktu);
-      gambarLantai(waktu);
-      gambarLubangHitam(waktu);
-      gambarHati(waktu);
-      requestAnimationFrame(gambar);
-    }
-
-    window.addEventListener("resize", aturUkuran);
-
-    aturUkuran();
-    requestAnimationFrame(gambar);
   </script>
 </body>
 </html>
